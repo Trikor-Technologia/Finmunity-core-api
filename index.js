@@ -2,6 +2,7 @@ import express from "express";
 import { database } from "./Database-connection/index.js";
 import { configDotenv } from "dotenv";
 import bodyParser from "body-parser";
+import cors from "cors"
 // Import Routes
 import userRoutes from "./Routes/userRoutes.js"
 import profileRoutes from "./Routes/profileRoutes.js"
@@ -12,6 +13,7 @@ const startServer = () => {
     configDotenv();
     const app = express();
     app.use(bodyParser.json())
+    app.use(cors());
     app.use("/api", [userRoutes, profileRoutes, postRoutes, blogRoutes])
     app.get("/", (req, res) => {
         res.json({ message: "Hii API" });
