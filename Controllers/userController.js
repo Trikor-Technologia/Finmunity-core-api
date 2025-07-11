@@ -34,7 +34,7 @@ export const login = async (req, res) => {
     if (!foundUser) {
       return res.status(401).json({ message: "User not found ! Please check - If registered or entered email or password" })
     }
-    return res.status(200).json({ message: "Login Successful" })
+    return res.status(200).json(foundUser, { message: "login successfull" })
   } catch (error) {
     console.log(error)
 
