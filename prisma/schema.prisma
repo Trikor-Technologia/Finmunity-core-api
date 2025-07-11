@@ -18,12 +18,30 @@ model User {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   email       String   @unique
   password    String
-  profile Profile?
+  profile     Profile?
+  posts       Post[]
+  blogs       Blog[]
 }
 model Profile {
-  id     String   @id @default(auto()) @map("_id") @db.ObjectId
-  Ask    String
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  Ask       String
   Community String
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @unique @db.ObjectId
+  user      User   @relation(fields: [userId], references: [id])
+  userId    String @unique @db.ObjectId
 }
+model Post{
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  Caption   String
+  ImageUrl  String
+  Author    String
+  user      User   @relation(fields: [userId], references: [id])
+  userId    String 
+}
+model Blog{
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  ImageUrl  String
+  Content    String
+  user      User   @relation(fields: [userId], references: [id])
+  userId    String 
+}
+

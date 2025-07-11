@@ -5,12 +5,14 @@ import bodyParser from "body-parser";
 // Import Routes
 import userRoutes from "./Routes/userRoutes.js"
 import profileRoutes from "./Routes/profileRoutes.js"
+import postRoutes from "./Routes/postRoutes.js"
+import blogRoutes from "./Routes/blogRoutes.js"
 import chalk from 'chalk';
 const startServer = () => {
     configDotenv();
     const app = express();
     app.use(bodyParser.json())
-    app.use("/api", [userRoutes, profileRoutes])
+    app.use("/api", [userRoutes, profileRoutes, postRoutes, blogRoutes])
     app.get("/", (req, res) => {
         res.json({ message: "Hii API" });
     })
