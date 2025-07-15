@@ -1,8 +1,34 @@
 import express from "express";
-const router = express.Router();
-import { register, login } from "../Controllers/userController.js";
+import { authenticateToken } from "../middleware/auth.js";
+import {
+  getUserProfile,
+  getUserPosts,
+  getUserBlogs,
+  getUserFollowers,
+  getUserFollowing,
+  followUser,
+  updateUserProfile,
+  getUserBookmarks,
+  addBookmark,
+  removeBookmark,
+  getSuggestedUsers,
+} from "../Controllers/userController.js";
 
-router.post("/add-user", register);
-router.post("/login-user", login);
+const router = express.Router();
+
+// Public routes
+router.get("/:id", getUserProfile);
+router.get("/:id/posts", getUserPosts);
+router.get("/:id/blogs", getUserBlogs);
+router.get("/:id/followers", getUserFollowers);
+router.get("/:id/following", getUserFollowing);
+router.get("/:id/bookmarks", getUserBookmarks);
+
+// Protected routes
+router.post("/:id/follow", authenticateToken, followUser);
+router.put("/profile", authenticateToken, updateUserProfile);
+router.post("/bookmarks", authenticateToken, addBookmark);
+router.delete("/bookmarks/:id", authenticateToken, removeBookmark);
+router.get("/suggested", authenticateToken, getSuggestedUsers);
 
 export default router;

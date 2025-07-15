@@ -1,12 +1,8 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  // output   = "../generated/prisma"
 }
 
 datasource db {
@@ -15,6 +11,7 @@ datasource db {
 }
 
 model User {
+<<<<<<< HEAD
   id       String     @id @default(auto()) @map("_id") @db.ObjectId
   email    String     @unique
   password String
@@ -46,6 +43,288 @@ model Post {
   user     User       @relation(fields: [userId], references: [id])
   userId   String
   Comments Comments[]
+=======
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  username       String?   @unique // Made optional to handle existing data
+  email          String    @unique
+  passwordHash   String
+  profilePicture String?
+  bio            String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  
+  // Relations
+  questions      Question[]
+  comments       Comment[]
+  news           News[]
+  posts          Post[]
+  blogs          Blog[]
+  communityComments CommunityComment[]
+  likes          Like[]
+  bookmarks      Bookmark[]
+  followers      Follower[] @relation("UserFollowers")
+  following      Follower[] @relation("UserFollowing")
+  notifications  Notification[]
+  sentMessages   Message[] @relation("MessageSender")
+  receivedMessages Message[] @relation("MessageReceiver")
+  conversations1 Conversation[] @relation("ConversationParticipant1")
+  conversations2 Conversation[] @relation("ConversationParticipant2")
+}
+
+model News {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  title             String
+  description       String
+  shortDescription  String?
+  image             String?
+  images            String[] // JSON array of image URLs
+  author            String
+  username          String
+  views             Int      @default(0)
+  timestamp         DateTime @default(now())
+  category          Category
+  sources           String[] // JSON array of sources
+  isTrending        Boolean  @default(false)
+  isPublished       Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  // Relations
+  user              User     @relation(fields: [userId], references: [id])
+  userId            String   @db.ObjectId
+}
+
+model Question {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  content     String
+  author      String
+  username    String
+  profilePicture String?
+  likes       Int      @default(0)
+  timestamp   DateTime @default(now())
+  category    QuestionCategory
+  isAnswered  Boolean  @default(false)
+  viewCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  user        User       @relation(fields: [userId], references: [id])
+  userId      String     @db.ObjectId
+  comments    Comment[]
+}
+
+model Comment {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  questionId  String   @db.ObjectId
+  author      String
+  username    String
+  text        String
+  likes       Int      @default(0)
+  isAnswer    Boolean  @default(false)
+  timestamp   DateTime @default(now())
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String   @db.ObjectId
+}
+
+model Stock {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  exchange      Exchange
+  category      String
+  value         String
+  change        String
+  isUp          Boolean
+  isTrending    Boolean  @default(false)
+  lastUpdated   DateTime @default(now())
+}
+
+model Post {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId
+  username      String
+  profilePicture String?
+  content       String
+  image         String?
+  viewCount     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments      CommunityComment[]
+  likes         Like[]
+  bookmarks     Bookmark[]
+}
+
+model Blog {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId
+  username      String
+  profilePicture String?
+  title         String
+  content       String
+  image         String?
+  tags          String[]
+  category      String?
+  viewCount     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments      CommunityComment[]
+  likes         Like[]
+  bookmarks     Bookmark[]
+}
+
+model CommunityComment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId    String?  @db.ObjectId
+  blogId    String?  @db.ObjectId
+  userId    String   @db.ObjectId
+  username  String
+  content   String
+  createdAt DateTime @default(now())
+  
+  // Relations
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  blog      Blog?    @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes     Like[]
+}
+
+model Like {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  postId      String?  @db.ObjectId
+  blogId      String?  @db.ObjectId
+  commentId   String?  @db.ObjectId
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post        Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  blog        Blog?    @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  comment     CommunityComment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, postId, blogId, commentId])
+}
+
+model Bookmark {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  type      BookmarkType
+  itemId    String
+  createdAt DateTime @default(now())
+  
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post?    @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  blog      Blog?    @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, type, itemId])
+}
+
+model Follower {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  followerId   String   @db.ObjectId
+  followingId  String   @db.ObjectId
+  createdAt    DateTime @default(now())
+  
+  // Relations
+  follower     User     @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
+  following    User     @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+  
+  @@unique([followerId, followingId])
+}
+
+model Notification {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId
+  type          NotificationType
+  fromUserId    String   @db.ObjectId
+  fromUsername  String
+  content       String
+  itemId        String?
+  itemType      ItemType?
+  isRead        Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  
+  // Relations
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  participant1Id  String   @db.ObjectId
+  participant2Id  String   @db.ObjectId
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  participant1    User     @relation("ConversationParticipant1", fields: [participant1Id], references: [id], onDelete: Cascade)
+  participant2    User     @relation("ConversationParticipant2", fields: [participant2Id], references: [id], onDelete: Cascade)
+  messages        Message[]
+  
+  @@unique([participant1Id, participant2Id])
+}
+
+model Message {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  conversationId  String   @db.ObjectId
+  senderId        String   @db.ObjectId
+  receiverId      String   @db.ObjectId
+  content         String
+  isRead          Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  
+  // Relations
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender          User     @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver        User     @relation("MessageReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+}
+
+enum Category {
+  crypto
+  stocks
+  etfs
+  economy
+}
+
+enum QuestionCategory {
+  investment
+  crypto
+  stocks
+  trading
+}
+
+enum Exchange {
+  NSE
+  BSE
+}
+
+enum BookmarkType {
+  post
+  blog
+}
+
+enum NotificationType {
+  like
+  comment
+  follow
+  mention
+}
+
+enum ItemType {
+  post
+  blog
+>>>>>>> abhinav/main
 }
 
 model Blog {

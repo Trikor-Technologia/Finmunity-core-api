@@ -1,27 +1,49 @@
 {
   "type": "module",
-  "name": "api",
+  "name": "finmunity-api",
   "version": "1.0.0",
-  "description": "A API",
+  "description": "Finmunity Financial Community API",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "db:setup": "node scripts/setup-database.js",
+    "db:reset": "prisma db push --force-reset && node scripts/setup-database.js",
+    "migrate:users": "node scripts/migrate-users.js"
   },
-  "author": "Devagya Rattan",
+  "author": "Finmunity",
   "license": "ISC",
   "dependencies": {
     "@faker-js/faker": "^9.9.0",
     "@prisma/client": "^6.11.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^2.2.0",
     "chalk": "^5.4.1",
     "cloudinary": "^2.7.0",
     "cors": "^2.8.5",
+<<<<<<< HEAD
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "mongoose": "^8.16.1",
     "multer": "^2.0.1",
     "nodemon": "^3.1.10"
+=======
+    "datauri": "^4.1.0",
+    "dotenv": "^17.0.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "express-validator": "^7.2.1",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.1",
+    "nodemon": "^3.1.10",
+    "sharp": "^0.34.3",
+    "socket.io": "^4.8.1",
+    "validator": "^13.11.0"
+>>>>>>> abhinav/main
   },
   "devDependencies": {
     "prisma": "^6.11.1"
