@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 import { faker } from '@faker-js/faker';
 export const createProfile = async (req, res) => {
     const userId = req.params.id
+    const { username, bio, profilepiURL, gender, followers, following } = req.body
     if (!userId) {
         return res.status(401).json({ message: "No id provided" });
     }
@@ -11,6 +12,12 @@ export const createProfile = async (req, res) => {
             data: {
                 Ask: faker.internet.username(),
                 Community: faker.internet.username(),
+                Username: username,
+                Bio: bio,
+                Profilepictureurl: profilepiURL,
+                Gender: gender,
+                Followers: followers,
+                Following: following,
                 userId: userId
             }
         })
@@ -20,7 +27,7 @@ export const createProfile = async (req, res) => {
         return res.status(500).json({ message: "Internal Server Error! Error Creating user Profile" })
     }
 }
-export const getUserProfileData = async (req,res) => {
+export const getUserProfileData = async (req, res) => {
     const userId = req.params.id
     if (!userId) {
         return res.status(401).json({ message: "No id provided" });

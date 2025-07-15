@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 export const createBlog = async (req, res) => {
     const userId = req.params.id
-    const { imageurl, content } = req.body;
+    const { imageurl, content, title } = req.body;
     if (!userId) {
         return res.status(401).json({ message: "No id provided" });
     }
@@ -12,6 +12,7 @@ export const createBlog = async (req, res) => {
             data: {
                 Content: content,
                 ImageUrl: imageurl,
+                Title: title,
                 userId: userId
             }
         })
